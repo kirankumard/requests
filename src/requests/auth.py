@@ -352,3 +352,20 @@ class HTTPDigestAuth(AuthBase):
 
     def __ne__(self, other: Any) -> bool:
         return not self == other
+
+
+class HTTPBearerAuth(AuthBase):
+    """Attaches HTTP Bearer Authentication to the given Request object."""
+
+    def __init__(self, token: str) -> None:
+        self.token = token
+
+    def __eq__(self, other: object) -> bool:
+        return self.token == getattr(other, "token", None)
+
+    def __ne__(self, other: object) -> bool:
+        return not self == other
+
+    def __call__(self, r: PreparedRequest) -> PreparedRequest:
+        r.headers["Authorization"] = f"Bearer {self.token}"
+        return r
