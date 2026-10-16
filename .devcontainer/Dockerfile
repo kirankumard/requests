@@ -7,5 +7,3 @@ RUN apt-get update && apt-get install -y python3 python3-pip --no-install-recomm
 
 ENV UV_LINK_MODE=copy
 ENV PATH="/usr/local/bin:$PATH"
-
-WORKDIR /workspace
