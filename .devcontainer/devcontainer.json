@@ -1,10 +1,5 @@
 {
     "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
-    "forwardPorts": [5678],
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-    "workspaceFolder": "/workspace",
-    "postCreateCommand": "uv sync --group test && uv pip install debugpy"
+        "dockerfile": "Dockerfile"
+    }
 }
