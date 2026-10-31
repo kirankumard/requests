@@ -213,7 +213,7 @@ class RequestEncodingMixin:
                         (
                             field.decode("utf-8")
                             if isinstance(field, bytes)
-                            else field,
+                            else str(field),
                             v.encode("utf-8") if isinstance(v, str) else v,
                         )
                     )
@@ -242,7 +242,7 @@ class RequestEncodingMixin:
             else:
                 fdata = fp
 
-            rf = RequestField(name=k, data=fdata, filename=fn, headers=fh)
+            rf = RequestField(name=k.decode("utf-8") if isinstance(k, bytes) else str(k), data=fdata, filename=fn, headers=fh)
             rf.make_multipart(content_type=ft)
             new_fields.append(rf)
 
