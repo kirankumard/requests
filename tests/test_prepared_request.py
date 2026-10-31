@@ -15,8 +15,8 @@ def fx_002():
 
 class TestPreparedRequest:
     
-    def test_tc_001_encode_files(self, fx_001):
+    def test_tc_001_prepare(self, fx_001):
         pass
     
-    def test_tc_002_encode_files(self, fx_002):
+    def test_tc_002_prepare(self, fx_002):
         pass
