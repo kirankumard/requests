@@ -1,0 +1,12 @@
+nodes:
+  hook-dispatch-mechanism:
+    type: Mechanism
+    content: >-
+      dispatch_hook(key, hooks, hook_data, **kwargs) iterates hooks[key] and
+      calls each callable with hook_data. If a hook returns a non-None value
+      that value replaces hook_data for subsequent hooks — hooks can transform
+      the data. The 'response' event is the only built-in hook event; it fires
+      in Session.send() for every response, including redirect intermediaries,
+      with the Response as hook_data. Register hooks via session.hooks['response']
+      or the hooks= kwarg on a request.
+    file: requests/hooks.py

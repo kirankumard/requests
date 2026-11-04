@@ -1,0 +1,13 @@
+nodes:
+  exception-hierarchy:
+    type: Concept
+    content: >-
+      All requests exceptions inherit from RequestException (itself an IOError).
+      ConnectionError wraps urllib3 connection failures (refused, DNS, reset).
+      Timeout splits into ConnectTimeout (connection phase timed out) and
+      ReadTimeout (server stalled mid-response) — catch Timeout for either.
+      HTTPError is raised only by response.raise_for_status() for 4xx/5xx
+      responses; it is not raised automatically. TooManyRedirects fires when
+      max_redirects is exceeded. URLRequired fires when no URL is provided.
+      MissingSchema and InvalidSchema cover malformed URLs.
+    file: requests/exceptions.py

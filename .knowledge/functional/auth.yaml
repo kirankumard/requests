@@ -1,0 +1,24 @@
+nodes:
+  auth-is-callable:
+    type: Pattern
+    content: >-
+      Auth in requests is any callable(PreparedRequest) → PreparedRequest.
+      AuthBase provides a __call__ hook and an __eq__ for comparison. Attach via
+      session.auth or the auth= kwarg on individual requests. The auth callable
+      is invoked inside Session.prepare_request() after headers and cookies are
+      merged. Custom auth subclasses AuthBase, implements __call__ to mutate or
+      replace the Authorization header, and returns the (possibly modified)
+      PreparedRequest.
+    file: requests/auth.py
+
+  digest-401-round-trip:
+    type: Mechanism
+    content: >-
+      HTTPDigestAuth requires a 401 round-trip. The first request is sent without
+      credentials. On receiving a 401 with WWW-Authenticate, the auth object
+      parses the challenge (realm, nonce, qop, algorithm, opaque) from the header,
+      computes the digest, and resends the original PreparedRequest with an
+      Authorization header. The 401 response is attached to resp.history. If the
+      server returns a second 401 (stale nonce), one retry is attempted with the
+      new nonce.
+    file: requests/auth.py

@@ -1,0 +1,34 @@
+nodes:
+  adapter-interface:
+    type: Component
+    content: >-
+      HTTPAdapter is the pluggable transport layer. Its send(request, stream,
+      timeout, verify, cert, proxies) receives a PreparedRequest and returns a
+      Response built from urllib3's response. Custom transports subclass
+      HTTPAdapter and override send(). The adapter also owns SSL certificate
+      verification, proxy tunnelling, and retry logic. Subclassing and passing
+      to session.mount() is the correct extension point for transport-level
+      behaviour (custom TLS, mock responses, etc.).
+    file: requests/adapters.py
+
+  adapter-mounting:
+    type: Mechanism
+    content: >-
+      Session.mount(prefix, adapter) registers an adapter keyed by URL prefix.
+      Session.get_adapter(url) selects the longest-matching prefix — so
+      "https://api.example.com" beats "https://" for that host. Default mounts
+      are set in Session.__init__: both "https://" and "http://" map to a shared
+      HTTPAdapter instance. Mount order does not matter; longest-prefix wins.
+    file: requests/sessions.py
+
+  urllib3-pool:
+    type: Mechanism
+    content: >-
+      HTTPAdapter holds a urllib3 PoolManager at self.poolmanager. Each unique
+      (scheme, host, port) gets its own ConnectionPool inside the manager. Pool
+      sizing is configured at adapter creation: pool_connections (default 10) is
+      the number of distinct host pools to cache; pool_maxsize (default 10) is
+      the number of connections kept open per pool. max_retries is a
+      urllib3.Retry instance controlling retry behaviour on the urllib3 side —
+      distinct from requests-level redirect following.
+    file: requests/adapters.py

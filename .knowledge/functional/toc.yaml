@@ -1,0 +1,32 @@
+domains:
+  session:
+    description: Session object — connection pooling, auth, cookies, hook dispatch
+    nodes:
+      session-is-entry-point: how requests.get/post map to Session internally
+      session-prepare-send: the prepare → send flow every request follows
+      session-redirect-resolution: how redirects are iterated and PreparedRequests rebuilt
+  transport:
+    description: HTTP transport layer — HTTPAdapter and urllib3 connection pools
+    nodes:
+      adapter-interface: what HTTPAdapter.send owns and how to override it
+      adapter-mounting: how prefix-based adapter selection works in get_adapter
+      urllib3-pool: how PoolManager backs the adapter and pool sizing params
+  models:
+    description: Request, PreparedRequest, and Response data models
+    nodes:
+      request-prepare-flow: how Session.prepare_request differs from Request.prepare
+      response-body-access: how .content, .text, and .json() decode the response body
+      merge-environment-settings: how env vars fold into request kwargs in send
+  auth:
+    description: Authentication — protocol, Basic, Digest, custom
+    nodes:
+      auth-is-callable: the auth callable contract and how to write custom auth
+      digest-401-round-trip: how HTTPDigestAuth handles the 401 WWW-Authenticate flow
+  hooks:
+    description: Event hooks — registration and dispatch
+    nodes:
+      hook-dispatch-mechanism: how dispatch_hook fires and what 'response' hook receives
+  exceptions:
+    description: Exception hierarchy and when each is raised
+    nodes:
+      exception-hierarchy: RequestException base and when each subclass surfaces

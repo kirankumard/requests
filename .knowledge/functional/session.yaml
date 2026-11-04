@@ -1,0 +1,33 @@
+nodes:
+  session-is-entry-point:
+    type: Mechanism
+    content: >-
+      requests.get(), .post(), .put() etc. in api.py are one-liner wrappers that
+      create a temporary Session, call session.request(), and close it. All real
+      behaviour — header merging, cookie persistence, auth, redirect following,
+      hook dispatch — lives in Session. Code that makes more than one request
+      should construct a Session directly to reuse connection pools and
+      session-level state.
+    file: requests/api.py
+
+  session-prepare-send:
+    type: Mechanism
+    content: >-
+      Session.request() builds a Request object, then calls
+      Session.prepare_request() to produce a PreparedRequest (URL encoded, headers
+      merged, auth applied, body encoded). It then calls Session.send() with the
+      PreparedRequest and merged kwargs (timeout, proxies, verify, cert,
+      allow_redirects). send() calls get_adapter(url) to select the right adapter
+      and delegates to adapter.send(). The return value is always a Response.
+    file: requests/sessions.py
+
+  session-redirect-resolution:
+    type: Mechanism
+    content: >-
+      Session.resolve_redirects() is a generator. When send() receives a 3xx
+      response and allow_redirects is True, it feeds the generator and collects
+      all intermediate responses into resp.history. Each iteration rebuilds a new
+      PreparedRequest for the redirect URL — stripping the body on 303, preserving
+      method on 307/308. Max redirects is session.max_redirects (default 30);
+      exceeding it raises TooManyRedirects.
+    file: requests/sessions.py

@@ -1,0 +1,35 @@
+nodes:
+  request-prepare-flow:
+    type: Mechanism
+    content: >-
+      Request.prepare() produces a bare PreparedRequest with no session context.
+      Session.prepare_request() is richer: it merges session-level cookies
+      (merge_setting), headers (merge_setting), auth (resolved from request then
+      session), environment proxies (get_environ_proxies), and cert/verify
+      settings before returning the PreparedRequest. Always go through Session
+      when session-level state must be applied; call Request.prepare() only for
+      standalone prepared requests that bypass the session.
+    file: requests/sessions.py
+
+  response-body-access:
+    type: Mechanism
+    content: >-
+      Response.content is the raw bytes, read from the urllib3 response and
+      cached. Response.text decodes content using Response.encoding; encoding is
+      taken from the charset in Content-Type, or detected via
+      chardet/charset-normalizer if absent. Response.json() calls
+      complexjson.loads(self.text) — it raises json.JSONDecodeError (not a
+      requests exception) on invalid JSON. Response.iter_content() and
+      iter_lines() stream bytes without loading the full body.
+    file: requests/models.py
+
+  merge-environment-settings:
+    type: Mechanism
+    content: >-
+      Session.merge_environment_settings(url, proxies, stream, verify, cert)
+      folds in REQUESTS_CA_BUNDLE and CURL_CA_BUNDLE env vars (for verify) and
+      HTTP_PROXY/HTTPS_PROXY/NO_PROXY (for proxies). Priority order: explicit
+      request-level kwargs > session attributes > environment variables. Called
+      inside Session.send() just before adapter.send(). Override behaviour by
+      setting session.verify, session.proxies, or passing kwargs to send().
+    file: requests/sessions.py
