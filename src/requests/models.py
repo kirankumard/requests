@@ -213,12 +213,16 @@ class RequestEncodingMixin:
                         (
                             field.decode("utf-8")
                             if isinstance(field, bytes)
-                            else field,
+                            else str(field),
                             v.encode("utf-8") if isinstance(v, str) else v,
                         )
                     )
 
         for k, v in files:
+            if isinstance(k, bytes):
+                k = k.decode("utf-8")
+            else:
+                k = str(k)
             # support for explicit filename
             ft = None
             fh = None
