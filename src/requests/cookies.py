@@ -613,6 +613,8 @@ def merge_cookies(
     if not isinstance(cookiejar, cookielib.CookieJar):  # runtime guard
         raise ValueError("You can only merge into CookieJar")
 
+    original_policy = getattr(cookiejar, "policy", None)
+
     if isinstance(cookies, dict):
         cookiejar = cookiejar_from_dict(cookies, cookiejar=cookiejar, overwrite=False)
     elif isinstance(cookies, cookielib.CookieJar):
@@ -621,5 +623,8 @@ def merge_cookies(
         else:
             for cookie_in_jar in cookies:
                 cookiejar.set_cookie(cookie_in_jar)
+
+    if original_policy is not None and hasattr(cookiejar, "policy"):
+        cookiejar.policy = original_policy
 
     return cookiejar
